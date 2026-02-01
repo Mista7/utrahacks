@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Servo.h>
+#include "rgb.h"
 
 // motor
 const int MOTORAFRONT = 2; // left
@@ -56,6 +57,7 @@ void irtest();
 void colortest();
 void ultrasonictest();
 void servotest();
+void color_detect_test();
 
 void red();
 
@@ -71,6 +73,8 @@ void left_90();
 void right_90();
 void left_45();
 void right_45();
+void right_110();
+
 
 bool check_line();
 long get_distance();
@@ -115,15 +119,10 @@ void loop() {
   // colortest();
   // ultrasonictest();
   // servotest();
+  // color_detect_test();
 
   ////////////////////////////////////// red
-  if (check_obstacle()) {
-    if (num_obstacles == 0) {
-      obstacle_left();
-    } else {
-      obstacle_right();
-    }
-  }
+  // red();
 }
 
 ////////////////////////////////////// LOOPS ////////////////////////////////////// 
@@ -196,6 +195,11 @@ void servotest() {
   servo1.write(180);
   servo2.write(180);
   delay(1000);
+}
+
+void color_detect_test() {
+  identifyColor();
+  delay(200);
 }
 
 void red() {
@@ -281,6 +285,11 @@ void left_45() {
 }
 
 void right_45() {
+  hard_right();
+  delay(1);
+}
+
+void right_110() {
   hard_right();
   delay(1);
 }
@@ -383,6 +392,51 @@ void obstacle_left() {
   }
 
   // STAGE 2
+  else if (stage == 2) {
+    if (check_line()) {
+      stage = 0;
+      num_obstacles++;
+      clearing_obstacle = false;
+      lastDirection = GO_LEFT;
+      Serial.println("OBSTACLE 1 COMPLETE");
+    } else {
+      forward();
+      delay(100);
+    }
+  }
+}
+
+void obstacle_right() {
+  // STAGE 0
+  if (stage == 0) {
+    hard_left();
+    delay(100);
+    long distance = get_distance();
+
+    if (distance > NOTHING_THRES || distance == 0) {
+      stage = 1;
+      forward();
+      delay(500);
+    }
+  }
+
+  // STAGE 1
+  else if (stage == 1) {
+    right_90();
+    long distance = get_distance();
+
+    if (distance > OBS_THRES || distance == 0) {
+      stage = 2;
+      forward();
+      delay(200);
+    } else {
+      left_90();
+      forward();
+      delay(200);
+    }
+  }
+
+  // STAGE 2  NEEDS CHANGE FOR BLUE BOX
   else if (stage == 2) {
     if (check_line()) {
       stage = 0;
