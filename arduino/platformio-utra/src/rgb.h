@@ -1,17 +1,17 @@
-#ifndef RGB_H
-#define RGB_H
+// #ifndef RGB_H
+// #define RGB_H
 
-#include <Arduino.h>
+// #include <Arduino.h>
 
-extern const int S2;
-extern const int S3;
-extern const int SENSOR_OUT;
+// extern const int S2;
+// extern const int S3;
+// extern const int SENSOR_OUT;
 
-struct RGB {
-  int r, g, b;
-};
+// struct RGB {
+//   int r, g, b;
+// };
 
-RGB readRGB();
-void identifyColor();
+// RGB readRGB();
+// void identifyColor();
 
-#endif
+// #endif

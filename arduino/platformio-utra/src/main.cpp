@@ -1,12 +1,13 @@
 #include <Arduino.h>
 #include <Servo.h>
-#include "rgb.h"
+// #include "rgb.h"
+#include "calibrate.h"
 
 // motor
-const int MOTORAFRONT = 2; // left
-const int MOTORABACK = 3;
-const int MOTORBFRONT = 4; // right
-const int MOTORBBACK = 5;
+const int MOTORAFRONT = 5; // left
+const int MOTORABACK = 4;
+const int MOTORBFRONT = 3; // right
+const int MOTORBBACK = 2;
 
 // sensor IR (flying fish)
 const int SENSOR_L = 6;
@@ -114,7 +115,7 @@ void setup() {
 
 
 void loop() {
-  // motortest();
+  motortest();
   // irtest();
   // colortest();
   // ultrasonictest();
@@ -128,19 +129,40 @@ void loop() {
 ////////////////////////////////////// LOOPS ////////////////////////////////////// 
 
 void motortest() {
-  Serial.println("F");
-  forward();
-  delay(2000);
+  // Serial.println("F");
+  // forward();
+  // delay(1000);
 
-  Serial.println("S");
+  // Serial.println("S");
+  // stop();
+  // delay(1000);
+
+  // Serial.println("B");
+  // backward();
+  // delay(1000);
+
+  // Serial.println("S");
+  // stop();
+  // delay(1000);
+
+  // Serial.println("L");
+  // hard_left();
+  // delay(2000);
+
+  // Serial.println("R");
+  // hard_right();
+  // delay(1000);
+
+  left_90();
   stop();
-  delay(1000);
-
-  Serial.println("B");
-  backward();
-  delay(2000);
-
-  Serial.println("S");
+  delay(500);
+  right_90();
+  stop();
+  delay(500);
+  left_45();
+  stop();
+  delay(500);
+  right_45();
   stop();
   delay(1000);
 }
@@ -198,7 +220,7 @@ void servotest() {
 }
 
 void color_detect_test() {
-  identifyColor();
+  // identifyColor();
   delay(200);
 }
 
@@ -271,22 +293,22 @@ void hard_right() {
 
 void left_90() {
   hard_left();
-  delay(1);
+  delay(670);
 }
 
 void right_90() {
   hard_right();
-  delay(1);
+  delay(670);
 }
 
 void left_45() {
   hard_left();
-  delay(1);
+  delay(400);
 }
 
 void right_45() {
   hard_right();
-  delay(1);
+  delay(400);
 }
 
 void right_110() {
