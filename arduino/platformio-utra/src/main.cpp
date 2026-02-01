@@ -21,8 +21,8 @@ const int S3 = 11;
 const int SENSOR_OUT = 12;
 
 // ultrasonic
-const int TRIG_PIN = A1;
-const int ECHO_PIN = A2;
+const int TRIG_PIN = A0;
+const int ECHO_PIN = A1;
 
 // servos
 const int SERVO_1_PIN = 13;
@@ -79,6 +79,7 @@ void right_110();
 
 
 bool check_line();
+long get_distance_filtered();
 long get_distance();
 bool check_obstacle();
 
@@ -86,6 +87,9 @@ bool check_obstacle();
 void linefollow();
 void obstacle_left(); // reroute around on the left
 void obstacle_right(); // right
+
+
+////////////////////////////////////// SETUP AND LOOP ////////////////////////////////////// 
 
 
 void setup() {
@@ -120,9 +124,9 @@ void loop() {
   // irtest();
   // colortest();
   // calibrationLoop();
-  // ultrasonictest();
+  ultrasonictest();
   // servotest();
-  color_detect_test();
+  // color_detect_test();
 
   ////////////////////////////////////// red
   // red();
@@ -203,12 +207,17 @@ void calibrationLoop() {
 }
 
 void ultrasonictest() {
-  long distance = get_distance();
+  long distance = get_distance_filtered();
   Serial.print("Distance: ");
   Serial.print(distance);
   Serial.println(" cm");
   
   if (distance != 0) {
+
+    if (distance == -1) {
+      Serial.println("Out of range");
+    }
+
     if (distance < NOTHING_THRES) {
       Serial.println("Something");
     }
@@ -349,6 +358,15 @@ bool check_line() {
   }
 }
 
+long get_distance_filtered() {
+  long d1 = get_distance();
+  long d2 = get_distance();
+  long d3 = get_distance();
+
+  if (d1 == -1 || d2 == -1 || d3 == -1) return -1;
+  return (d1 + d2 + d3) / 3;
+}
+
 long get_distance() {
   digitalWrite(TRIG_PIN, LOW); // clean
   delayMicroseconds(2);
@@ -362,6 +380,11 @@ long get_distance() {
   
   // Math: d = (t * v_sound) / 2 (there and back)
   // v_sound = 0.034 cm/us
+
+  if (duration == 0) {
+    return -1; // out of range
+  }
+
   long cm = duration * 0.034 / 2;
   return cm;
 }
