@@ -60,6 +60,7 @@ void calibrationLoop();
 void ultrasonictest();
 void servotest();
 void color_detect_test();
+void followLine();
 
 void red();
 
@@ -124,7 +125,7 @@ void loop() {
   // irtest();
   // colortest();
   // calibrationLoop();
-  ultrasonictest();
+  // ultrasonictest();
   // servotest();
   // color_detect_test();
   followLine();
