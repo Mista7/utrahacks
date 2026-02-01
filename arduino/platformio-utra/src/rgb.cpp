@@ -4,9 +4,9 @@
 
 // calibration
 // Put the sensor over WHITE and record the pulseIn values
-const int W_RED = 20, W_GREEN = 25, W_BLUE = 20;
+const int W_RED = 16, W_GREEN = 18, W_BLUE = 15;
 // Put the sensor over BLACK and record the pulseIn values
-const int B_RED = 200, B_GREEN = 220, B_BLUE = 200;
+const int B_RED = 127, B_GREEN = 150, B_BLUE = 126;
 
 RGB readRGB() {
   RGB color;
@@ -37,12 +37,16 @@ void identifyColor() {
   Serial.print(" G: "); Serial.print(data.g);
   Serial.print(" B: "); Serial.println(data.b);
 
-  if (data.r > 200 && data.g < 100 && data.b < 100) {
-    Serial.println("Detected: RED");
-  } else if (data.g > 200 && data.r < 100) {
-    Serial.println("Detected: GREEN");
-  } else if (data.r < 50 && data.g < 50 && data.b < 50) {
+  if (data.r < 50 && data.g < 50 && data.b < 50) {
     Serial.println("Detected: BLACK");
+  } else if (data.r > 220 && data.g > 220 && data.b > 220) {
+    Serial.println("Detected: WHITE");
+  } else if (data.r > 230 && data.g < 180 && data.b < 180) {
+    Serial.println("Detected: RED");
+  } else if (data.r < 180 && data.b > 230) {
+    Serial.println("Detected: BLUE");
+  } else if (data.g > 230 && data.r < 180) {
+    Serial.println("Detected: GREEN");
   } else {
     Serial.println("Detected: UNKNOWN");
   }

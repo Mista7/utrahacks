@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Servo.h>
-// #include "rgb.h"
+#include "rgb.h"
 #include "calibrate.h"
 
 // motor
@@ -56,6 +56,7 @@ int stage = 0;
 void motortest();
 void irtest();
 void colortest();
+void calibrationLoop();
 void ultrasonictest();
 void servotest();
 void color_detect_test();
@@ -115,12 +116,13 @@ void setup() {
 
 
 void loop() {
-  motortest();
+  // motortest();
   // irtest();
   // colortest();
+  // calibrationLoop();
   // ultrasonictest();
   // servotest();
-  // color_detect_test();
+  color_detect_test();
 
   ////////////////////////////////////// red
   // red();
@@ -179,6 +181,27 @@ void colortest() {
   delay(200);
 }
 
+void calibrationLoop() {
+  // 1. SELECT RED
+  digitalWrite(S2, LOW); digitalWrite(S3, LOW);
+  int r = pulseIn(SENSOR_OUT, LOW);
+  delay(10); // Give the sensor a tiny break
+
+  // 2. SELECT BLUE
+  digitalWrite(S2, LOW); digitalWrite(S3, HIGH);
+  int b = pulseIn(SENSOR_OUT, LOW);
+  delay(10);
+
+  // 3. SELECT GREEN
+  digitalWrite(S2, HIGH); digitalWrite(S3, HIGH);
+  int g = pulseIn(SENSOR_OUT, LOW);
+
+  // 4. PRINT ALL THREE
+  Serial.print("R_Raw: "); Serial.print(r);
+  Serial.print(" | G_Raw: "); Serial.print(g);
+  Serial.print(" | B_Raw: "); Serial.println(b);
+}
+
 void ultrasonictest() {
   long distance = get_distance();
   Serial.print("Distance: ");
@@ -220,7 +243,7 @@ void servotest() {
 }
 
 void color_detect_test() {
-  // identifyColor();
+  identifyColor();
   delay(200);
 }
 
@@ -293,22 +316,22 @@ void hard_right() {
 
 void left_90() {
   hard_left();
-  delay(670);
+  delay(400);
 }
 
 void right_90() {
   hard_right();
-  delay(670);
+  delay(400);
 }
 
 void left_45() {
   hard_left();
-  delay(400);
+  delay(250);
 }
 
 void right_45() {
   hard_right();
-  delay(400);
+  delay(250);
 }
 
 void right_110() {
