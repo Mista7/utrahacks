@@ -502,9 +502,11 @@ void searchForLine() {
   static bool sweepRight = true;
 
   if (sweepRight) {
+    Serial.println("Turning right");
     weak_right();
     delay(150);
   } else {
+    Serial.println("Turning left");
     weak_left();
     delay(150);
   }
@@ -516,8 +518,10 @@ void followLine() {
   RGB color = readRGB();
 
   if (isBlack(color)) {
+    Serial.println("Seeing Black");
     forward();
   } else {
+    Serial.println("Lost Line");
     searchForLine();
   }
 }
