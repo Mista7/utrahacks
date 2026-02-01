@@ -8,10 +8,6 @@ const int W_RED = 20, W_GREEN = 25, W_BLUE = 20;
 // Put the sensor over BLACK and record the pulseIn values
 const int B_RED = 200, B_GREEN = 220, B_BLUE = 200;
 
-struct RGB {
-  int r, g, b;
-};
-
 RGB readRGB() {
   RGB color;
 
