@@ -1,6 +1,4 @@
-#ifndef RGB_H
-#define RGB_H
-
+#pragma once
 #include <Arduino.h>
 
 extern const int S2;
@@ -14,4 +12,4 @@ struct RGB {
 RGB readRGB();
 void identifyColor();
 
-#endif
+bool isBlack(const RGB& color);

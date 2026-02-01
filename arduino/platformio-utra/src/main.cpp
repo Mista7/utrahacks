@@ -127,6 +127,7 @@ void loop() {
   ultrasonictest();
   // servotest();
   // color_detect_test();
+  followLine();
 
   ////////////////////////////////////// red
   // red();
@@ -516,5 +517,30 @@ void obstacle_right() {
       forward();
       delay(100);
     }
+  }
+}
+
+// Line follower Code
+void searchForLine() {
+  static bool sweepRight = true;
+
+  if (sweepRight) {
+    weak_right();
+    delay(150);
+  } else {
+    weak_left();
+    delay(150);
+  }
+
+  sweepRight = !sweepRight;
+}
+
+void followLine() {
+  RGB color = readRGB();
+
+  if (isBlack(color)) {
+    forward();
+  } else {
+    searchForLine();
   }
 }

@@ -51,3 +51,8 @@ void identifyColor() {
     Serial.println("Detected: UNKNOWN");
   }
 }
+
+bool isBlack(const RGB& color) {
+  const int BLACK_THRESHOLD = 50; // Adjust threshold as needed
+  return (color.r < BLACK_THRESHOLD && color.g < BLACK_THRESHOLD && color.b < BLACK_THRESHOLD);
+}
