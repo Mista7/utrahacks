@@ -37,11 +37,11 @@ void identifyColor() {
   Serial.print(" G: "); Serial.print(data.g);
   Serial.print(" B: "); Serial.println(data.b);
 
-  if (data.r < 50 && data.g < 50 && data.b < 50) {
+  if (data.r < 50 && data.g < 50 && data.b < 0) {
     Serial.println("Detected: BLACK");
-  } else if (data.r > 220 && data.g > 220 && data.b > 220) {
+  } else if (data.r > 230 && data.g > 230 && data.b > 230) {
     Serial.println("Detected: WHITE");
-  } else if (data.r > 230 && data.g < 180 && data.b < 180) {
+  } else if (data.r > 220 && data.g < 130 && data.b < 200) {
     Serial.println("Detected: RED");
   } else if (data.r < 180 && data.b > 230) {
     Serial.println("Detected: BLUE");
@@ -55,4 +55,10 @@ void identifyColor() {
 bool isBlack(const RGB& color) {
   const int BLACK_THRESHOLD = 50; // Adjust threshold as needed
   return (color.r < BLACK_THRESHOLD && color.g < BLACK_THRESHOLD && color.b < BLACK_THRESHOLD);
+}
+
+bool isRed(const RGB& color){
+  const int RED_THRESHOLD = 210;
+  return (color.r > RED_THRESHOLD && color.g < RED_THRESHOLD && color.b < RED_THRESHOLD);
+
 }

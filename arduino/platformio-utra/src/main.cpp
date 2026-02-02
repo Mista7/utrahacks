@@ -9,6 +9,8 @@ const int MOTORABACK = 4;
 const int MOTORBFRONT = 3; // right
 const int MOTORBBACK = 2;
 
+int MOTOR_SPEED = 128;
+
 // sensor IR (flying fish)
 const int SENSOR_L = 6;
 const int SENSOR_R = 7;
@@ -25,7 +27,7 @@ const int TRIG_PIN = A0;
 const int ECHO_PIN = A1;
 
 // servos
-const int SERVO_1_PIN = 13;
+const int SERVO_1_PIN = A2;
 const int SERVO_2_PIN = 14;
 Servo servo1;
 Servo servo2;
@@ -68,6 +70,7 @@ void red();
 void forward();
 void backward();
 void stop();
+void stopFor(int ms);
 void weak_left();
 void weak_right();
 void hard_left();
@@ -111,8 +114,8 @@ void setup() {
   digitalWrite(S0, HIGH);
   digitalWrite(S1, LOW);
 
-  servo1.attach(SERVO_1_PIN);
-  servo2.attach(SERVO_2_PIN);
+  servo1.attach(SERVO_1_PIN, 500, 2400);
+  // servo2.attach(SERVO_2_PIN);
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(ECHO_PIN, INPUT);
 
@@ -239,18 +242,19 @@ void ultrasonictest() {
 void servotest() {
   Serial.println("Servos to 0");
   servo1.write(0);
-  servo2.write(0);
-  delay(1000);
+  delay(1500);
 
-  Serial.println("Servos to 90");
-  servo1.write(90);
-  servo2.write(90);
-  delay(1000);
+  Serial.println("Servos to 30");
+  servo1.write(30);
+  delay(1500);
 
-  Serial.println("Servos to 180");
-  servo1.write(180);
-  servo2.write(180);
-  delay(1000);
+  Serial.println("Servos to 0");
+  servo1.write(0);
+  delay(1500);
+
+  Serial.println("Servos to 30");
+  servo1.write(30);
+  delay(1500);
 }
 
 void color_detect_test() {
@@ -295,6 +299,11 @@ void stop() {
   digitalWrite(MOTORABACK, LOW);
   digitalWrite(MOTORBFRONT, LOW);
   digitalWrite(MOTORBBACK, LOW);
+}
+
+void stopFor(int ms) {
+  stop();
+  delay(ms);
 }
 
 void weak_left() {
@@ -523,20 +532,47 @@ void obstacle_right() {
 
 // Line follower Code
 void searchForLine() {
-  static bool sweepRight = true;
+  static int step = 0;
+  
+  // while(! isRed(colour))
 
-  if (sweepRight) {
-    Serial.println("Turning right");
-    weak_right();
-    delay(150);
-  } else {
-    Serial.println("Turning left");
+  if (step == 0) {
+    Serial.println("Weak left");
     weak_left();
-    delay(150);
+    delay(120);
+  }
+  else if (step == 1) {
+    Serial.println("Weak right");
+    weak_right();
+    delay(240);
+  }
+  // else if (step == 2) {
+  //   Serial.println("Hard left");
+  //   hard_left();
+  //   delay(220);
+  // }
+  // else if (step == 3) {
+  //   Serial.println("Hard right");
+  //   hard_right();
+  //   delay(220);
+  // }
+  else {
+    step = 0;
+    return;
   }
 
-  sweepRight = !sweepRight;
+  stopFor(120);
+
+  RGB color = readRGB();
+  if (isBlack(color)) {
+    Serial.println("Line found!");
+    step = 0;     // reset search pattern
+    return;
+  }
+
+  step++;
 }
+
 
 void followLine() {
   RGB color = readRGB();
@@ -544,8 +580,22 @@ void followLine() {
   if (isBlack(color)) {
     Serial.println("Seeing Black");
     forward();
+  } else if (isRed(color)) {
+    Serial.println("Seeing Red");
+    forward();
   } else {
     Serial.println("Lost Line");
     searchForLine();
+
+
+  // hard_left();
+  // delay(600);
+
+  // while(!isBlack(color) && !isRed(color) ) {
+  //   hard_right();
+  //   delay(25);
+  //   RGB color = readRGB();
+  // }
+
   }
 }

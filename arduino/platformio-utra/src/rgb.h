@@ -13,3 +13,4 @@ RGB readRGB();
 void identifyColor();
 
 bool isBlack(const RGB& color);
+bool isRed(const RGB& color);
